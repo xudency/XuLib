@@ -12,7 +12,7 @@
 * 
 * Date Author Release  Description Of Change 
 * ---- ----- ---------------------------- 
-*2014.6.27, dxu, initial coding.
+*2016.11.27, dxu, initial coding.
 *
 ****************************************************************/ 
 #include <stdio.h>
