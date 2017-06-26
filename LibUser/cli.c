@@ -1,3 +1,20 @@
+/********************************************************************
+* FILE NAME: cmd.c
+*
+*
+* PURPOSE: cmd and routing function define here.
+*
+* 
+* NOTES:
+*
+* 
+* DEVELOPMENT HISTORY: 
+* 
+* Date Author Release  Description Of Change 
+* ---- ----- ---------------------------- 
+*2016.11.27, dxu, initial coding.
+*
+****************************************************************/ 
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -8,11 +25,21 @@
 #include <sys/stat.h>
 #include <time.h>
 #include <math.h>
-#include "declare.h"
-#include "../comm/ioctl_comm.h"
+#include "cli.h"
+#include "type.h"
+#include "../common.h"
 
+char devname[20];
 
-int kernel_dbg(int argc, char* argv[])
+int usage (int argc, char* argv[])
+{
+    /*  cmd list help to be continued...  */
+    printf("-tc -c ch -e ep -p pl -l lun -g page -b blk   \n");
+    printf("-krnl_in -p ppa_addr                           \n");
+    return OK;
+}
+
+int krnl_ioctl(int argc, char* argv[])
 {
 	int i, result, fd;
 	int cmd = MY_IOCTL_DBG;
@@ -45,7 +72,7 @@ free_mem:
 	return result;
 }
 
-int setppa(int argc, char* argv[])
+int get_opt_example(int argc, char* argv[])
 {
     struct physical_address ppa_addr;
     long para = 0;
@@ -112,42 +139,47 @@ int setppa(int argc, char* argv[])
     return 0;
 }
 
-
-int getppa(int argc, char* argv[])
+//////////////////////////////////////////////////////////////////////////////
+struct cli_callback_fn g_cmd_func_list[] = 
 {
-    struct physical_address ppa_addr;
+	/* run in User space only*/
+	{"-help", usage},
+	{"-tc", get_opt_example},
 
-    long para = 0;
-    long para_num = 0;
-    char* endptr;
-    int opt = 0;
-    char* optstring = "p:";
+	/* control sample dev, run from User to Kernel space*/
+	{"-krnl_in", krnl_ioctl},
+	{NULL, NULL},
+};
 
-    while (ERROR != (opt = getopt(argc, argv, optstring))) 
-    { 
-        switch (opt) 
-        {
-            case 'p':
-                para_num++;
-                para = strtol(optarg, &endptr, 0);
-                printf("ppa_addr: 0x%lx\n", para);
-                ppa_addr.ppa = (u32)para;
-                break;
-                
-            default :
-                printf("unexpected parameter of crtsq: %c.\n", opt);
-                break;
+const int cmd_func_list_size = ARRAY_SIZE(g_cmd_func_list);
+
+int cli_main(int argc, char* argv[])
+{
+    int i = 0;
+    int ret = ERROR;    
+
+    snprintf(devname, 20, "%s", "dev/debugger_node");
+
+    for (i = 0; i < cmd_func_list_size; i++) 
+    {
+        if ((NULL != g_cmd_func_list[i].cmd) && 
+		(!strcmp(argv[1], g_cmd_func_list[i].cmd))) {
+            argc--;
+            argv++;
+
+            /* call the command routine */
+            ret = g_cmd_func_list[i].fn(argc, argv);
+            break;
+        } else {
+            continue;
         }
     }
-
-    printf("CH:%d\n", ppa_addr.nand.ch);
     
-    printf("EP:%d\n", ppa_addr.nand.sec);
-    printf("PL:%d\n", ppa_addr.nand.pl);
-    printf("LUN:%d\n", ppa_addr.nand.lun);
-    printf("PG:%d\n", ppa_addr.nand.pg);
-    printf("BLK:%d\n", ppa_addr.nand.blk);
-
-    return 0;
+    if (cmd_func_list_size == i){
+        printf("Command error, adding \"-help\" cmd for help.\n");
+        return ERROR;
+    }
+    
+    return ret;
 }
 

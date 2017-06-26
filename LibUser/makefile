@@ -5,7 +5,7 @@
 #===========================================================================
 
 # Excecutable file.
-PROGRAM   = apptool
+PROGRAM   = usrkit
 
 # Parameters .
 CC      = gcc

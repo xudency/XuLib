@@ -1,3 +1,3 @@
-# cmd-limd-tool
-User command line tools
-some misc debug and convenient tools during my job
+# XuLib
+this is a code Library, collect and get from Open source project    
+which I think can apply in further project    
