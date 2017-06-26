@@ -8,15 +8,19 @@
 #include <sys/stat.h>
 #include <time.h>
 #include <math.h>
-#include "cli.h"
+
 #include "type.h"
+#include "cli.h"
 #include "string.h"
+#include "skiplist.h"
 #include "../common.h"
 
 
 int main(int argc, char* argv[])
 {
-	//return cli_main(argc, argv);
+	//cli_main(argc, argv);
+
+	//string_main(argc, argv);
 
 	//string_main(argc, argv);
 	
