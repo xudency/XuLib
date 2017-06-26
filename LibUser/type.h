@@ -1,8 +1,10 @@
 #ifndef _TYPE_H
 #define _TYPE_H
 
-#define PRINT(format, args...)                      \
-    printf("[%s-%d] "format "\n", __FUNCTION__, __LINE__, ## args);
+#include <stdio.h>
+
+#define PRINT(format, args...)  \
+    printf("[%s:%d]"format "\n", __FUNCTION__, __LINE__, ## args);
 
 
 typedef unsigned char u8;
