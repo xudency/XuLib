@@ -1,7 +1,8 @@
 #include <stdlib.h>
 #include <stdio.h>
+#include <time.h>
 #include "skiplist.h"
-
+#include "type.h"
 skiplistNode *slCreateNode(int level, double score) 
 {
         skiplistNode * sn = malloc(sizeof(*sn) + \
@@ -37,7 +38,7 @@ void slFreeNode(skiplistNode *sn) {
 void slFree(skiplist *sl) 
 {
         skiplistNode *next;
-        skiplistNode *node = sl->header->level[0].forward, 
+        skiplistNode *node = sl->header->level[0].forward; 
 
         free(sl->header);
         while(node) {
