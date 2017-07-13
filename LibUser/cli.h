@@ -9,5 +9,9 @@ struct cli_callback_fn
 
 extern int cli_main(int argc, char* argv[]);
 
+
+//////
+extern void binary_tree_test(int argc, char* argv[]);
+
 #endif
 

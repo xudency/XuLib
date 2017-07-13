@@ -12,7 +12,8 @@ CC      = gcc
 CFLAGS  = -g -O2 -Wall
 RM      = rm -f
 COMPILE = $(CC) $(CFLAGS) -c
-OBJS    = $(addsuffix .o, $(basename $(wildcard *.c)))
+SRCS	= $(wildcard *.c)
+OBJS    = $(addsuffix .o, $(basename $(SRCS)))
 
 # Make goes here.
 all: $(PROGRAM)
