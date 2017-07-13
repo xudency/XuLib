@@ -11,8 +11,6 @@ struct binary_node {
 typedef struct binary_node btnode;
 
 
-
-
 void insert(btnode **tree, int val) 
 {
 	btnode *temp = NULL;
@@ -42,8 +40,7 @@ void deltree(btnode *tree)
 }
 
 
-void print_preorder(btnode * tree) 
-{
+void print_preorder(btnode *tree) {
 	if(tree) {
 		printf("%d\n",tree->data);
 		print_preorder(tree->left);
@@ -51,12 +48,26 @@ void print_preorder(btnode * tree)
 	}
 }
 
+void print_inorder(btnode *tree) {
+	if(tree) {
+		print_inorder(tree->left);
+		printf("%d\n",tree->data);
+		print_inorder(tree->right);
+	}
+}
+
+void print_postorder(btnode *tree) {
+	if(tree) {
+		print_postorder(tree->left);
+		print_postorder(tree->right);
+		printf("%d\n",tree->data);
+	}
+}
+
 
 void binary_tree_test(int argc, char* argv[])
 {
 	btnode *root = NULL;
-
-	PRINT("start insert");
 
 	insert(&root, 15);
 	insert(&root, 9);
@@ -67,8 +78,17 @@ void binary_tree_test(int argc, char* argv[])
 	insert(&root, 24);
 	insert(&root, 21);
 
-	PRINT("end insert");
+	printf("preodrer\n");
 	print_preorder(root);
+	printf("===============\n");
+
+	printf("inodrer\n");
+	print_inorder(root);
+	printf("===============\n");
+
+	printf("postodrer\n");
+	print_postorder(root);
+	printf("===============\n");
 
 	deltree(root);
 }
