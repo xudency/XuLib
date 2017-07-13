@@ -76,7 +76,8 @@ void binary_tree_test(int argc, char* argv[])
 	bt_insert(&root, 10);
 	bt_insert(&root, 18);	
 	bt_insert(&root, 24);
-	bt_insert(&root, 21);
+	bt_insert(&root, 21);	
+	bt_insert(&root, 19);
 
 	printf("preodrer\n");
 	print_preorder(root);

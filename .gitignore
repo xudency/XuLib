@@ -104,3 +104,7 @@ all.config
 
 # Kdevelop4
 *.kdev4
+
+# bin
+LibUser/usrkit
+
