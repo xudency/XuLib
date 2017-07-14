@@ -10,74 +10,96 @@ struct binary_node {
 
 typedef struct binary_node btnode;
 
-void bt_insert(btnode **tree, int val)
+btnode *btnode_new(int val)
 {
-	if (*tree == NULL) {
-		btnode * tmp = malloc(sizeof(btnode));
+	btnode *tmp;
 
-		tmp->left = tmp->right = NULL;
-		tmp->data = val;
-		*tree = tmp;
+	tmp = malloc(sizeof(btnode));
+
+	tmp->left = tmp->right = NULL;
+	tmp->data = val;
+
+	return tmp;
+}
+
+void __bt_insert(btnode **root, btnode *node)
+{
+	if (*root == NULL) {
+		*root = node;
 		return;
 	}
 
-	if (val < (*tree)->data) {
-		bt_insert(&((*tree)->left), val);
-	} else if (val > (*tree)->data) {
-		bt_insert(&((*tree)->right), val);
-	}
-
-	return;
-}
-
-void deltree(btnode *tree) 
-{
-	if(tree) {
-		deltree(tree->left);
-		deltree(tree->right);
-		free(tree);
-	}
-}
-
-
-void print_preorder(btnode *tree) {
-	if(tree) {
-		printf("%d\n",tree->data);
-		print_preorder(tree->left);
-		print_preorder(tree->right);
-	}
-}
-
-void print_inorder(btnode *tree) {
-	if(tree) {
-		print_inorder(tree->left);
-		printf("%d\n",tree->data);
-		print_inorder(tree->right);
-	}
-}
-
-void print_postorder(btnode *tree) {
-	if(tree) {
-		print_postorder(tree->left);
-		print_postorder(tree->right);
-		printf("%d\n",tree->data);
-	}
-}
-
-int bt_search(btnode *tree, int val)
-{
-	if (tree->data == val) {
-		return 1;
-	} else if (tree->data < val) {
-		if (tree->right != NULL)
-			return bt_search(tree->right, val);
-		else
-			return 0;
+	if (node->data < (*root)->data) {
+		__bt_insert(&((*root)->left), node);
 	} else {
-		if (tree->left != NULL)
-			return bt_search(tree->left, val);
-		else
-			return 0;
+		__bt_insert(&((*root)->right), node);
+	}
+}
+
+void bt_insert(btnode **root, int val)
+{
+	btnode *new = btnode_new(val);
+
+	__bt_insert(root, new);
+}
+
+
+btnode *bt_search(btnode *root, int val)
+{
+	if (root->data == val) {
+		return root;
+	} else if (root->data < val) {
+		if (root->right != NULL) {
+			return bt_search(root->right, val);
+		} else {
+			return NULL;
+		}
+	} else {
+		if (root->left != NULL) {
+			return bt_search(root->left, val);
+		} else {
+			return NULL;
+		}
+	}
+}
+
+
+void bt_remove(btnode **root, btnode *node)
+{
+
+}
+
+
+void bt_destroy(btnode *root) 
+{
+	if(root) {
+		bt_destroy(root->left);
+		bt_destroy(root->right);
+		free(root);
+	}
+}
+
+void print_preorder(btnode *root) {
+	if(root) {
+		printf("%d\n",root->data);
+		print_preorder(root->left);
+		print_preorder(root->right);
+	}
+}
+
+void print_inorder(btnode *root) {
+	if(root) {
+		print_inorder(root->left);
+		printf("%d\n",root->data);
+		print_inorder(root->right);
+	}
+}
+
+void print_postorder(btnode *root) {
+	if(root) {
+		print_postorder(root->left);
+		print_postorder(root->right);
+		printf("%d\n",root->data);
 	}
 }
 
@@ -85,6 +107,7 @@ void binary_tree_test(int argc, char* argv[])
 {
 	int ret, a;
 	btnode *root = NULL;
+	btnode *node = NULL;
 
 	bt_insert(&root, 15);
 	bt_insert(&root, 9);
@@ -95,11 +118,13 @@ void binary_tree_test(int argc, char* argv[])
 	bt_insert(&root, 24);
 	bt_insert(&root, 21);	
 	bt_insert(&root, 19);
+	bt_insert(&root, 25);
+	bt_insert(&root, 12);
 
 	printf("pls input the val:");
 	scanf("%d", &a);
-	ret = bt_search(root, a);
-	if (ret) {
+	node = bt_search(root, a);
+	if (node) {
 		printf("find %d in tree\n", a);
 	} else {
 		printf("Can't find %d in tree\n", a);
@@ -107,9 +132,9 @@ void binary_tree_test(int argc, char* argv[])
 
 	/*printf("preodrer\n");
 	print_preorder(root);
-	printf("===============\n");
+	printf("===============\n");*/
 
-	printf("inodrer\n");
+	/*printf("inodrer\n");
 	print_inorder(root);
 	printf("===============\n");
 
@@ -117,6 +142,7 @@ void binary_tree_test(int argc, char* argv[])
 	print_postorder(root);
 	printf("===============\n");*/
 
-	deltree(root);
+	bt_destroy(root);
 }
+
 
