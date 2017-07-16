@@ -216,7 +216,7 @@ void travesal_bt(btnode *root)
 	} else {
 		return NULL;
 	}
-}*
+}*/
 
 /*
 void print_preorder(btnode *root) {
@@ -294,5 +294,4 @@ void binary_tree_test(int argc, char* argv[])
 
 	bt_destroy(root);
 }
-
 
