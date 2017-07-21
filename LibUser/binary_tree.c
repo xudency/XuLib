@@ -6,13 +6,20 @@
 #define LEFT_CHILD 	0
 #define RIGHT_CHILD	1
 
-struct binary_node {
+// BST, Binary Sort Tree
+
+struct BSTreeNode {
 	int data;
-	struct binary_node *left;
-	struct binary_node *right;	
+	struct BSTreeNode *left;
+	struct BSTreeNode *right;	
 };
 
-typedef struct binary_node btnode;
+/*struct BSTree_root {
+	struct bst_node *node;
+}*/
+
+typedef struct BSTreeNode btnode;
+//typedef struct bst_root
 
 // binary_tree ops
 //	insert
