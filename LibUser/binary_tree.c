@@ -98,13 +98,13 @@ void bst_insert_node(bst_root *root, int val)
 //    k. (both child && has parent) && parent's right
 //    l. (both child && no parent)
 
-void __bt_delete_node(bst_node** root, bst_node *deleteNode)
+void __bst_delete_node(bst_root* root, bst_node *deleteNode)
 {  
 	bst_node* parent = NULL;  
 	int dir = -1; 
 
 	// double check the deleteNode is exist, and get parent and dir
-	if (bst_search_node(*root, deleteNode->data, &parent, &dir) == NULL) {
+	if (bst_search_node(root->node, deleteNode->data, &parent, &dir) == NULL) {
 		printf("Error state");
 		return;
 	}
@@ -117,7 +117,7 @@ void __bt_delete_node(bst_node** root, bst_node *deleteNode)
                         else  
                                 parent->right = NULL;  //b
                 } else {
-                        *root = NULL;  		       //c
+                        root->node= NULL;  		       //c
                 }  
         } else if (deleteNode->left != NULL && deleteNode->right == NULL) {  
     		if (parent != NULL) {  
@@ -126,7 +126,7 @@ void __bt_delete_node(bst_node** root, bst_node *deleteNode)
                         else  
                                 parent->right = deleteNode->left;  //e
                 } else {
-                        *root = deleteNode->left;  		//f
+                        root->node = deleteNode->left;  		//f
                 }  
         } else if (deleteNode->left == NULL && deleteNode->right != NULL){  
     		if (parent != NULL) {  
@@ -135,7 +135,7 @@ void __bt_delete_node(bst_node** root, bst_node *deleteNode)
                         else  
                                 parent->right = deleteNode->right;  //h
                 } else {
-                        *root = deleteNode->right;  //i
+                        root->node = deleteNode->right;  //i
                 }  
         } else {
         	bst_root tmp;
@@ -147,23 +147,23 @@ void __bt_delete_node(bst_node** root, bst_node *deleteNode)
                         else  
                                 parent->right = deleteNode->left; //k
                 } else {
-                        *root = deleteNode->left;    //l
+                        root->node = deleteNode->left;    //l
                 }  
         }  
         free(deleteNode); 
         deleteNode = NULL;
 }
 
-void bt_delete_node(bst_node** root, int value)
+void bst_delete_node(bst_root* root, int value)
 {
         int dir = -1;  
         bst_node* parent = NULL;  
 
-        bst_node* deleteNode = bst_search_node(*root, value, &parent, &dir); 
+        bst_node* deleteNode = bst_search_node(root->node, value, &parent, &dir); 
         if(deleteNode == NULL){  
                 printf("%s\n", "node not found");
         } else {
-		__bt_delete_node(root, deleteNode);
+		__bst_delete_node(root, deleteNode);
 	}
 }
 
@@ -236,7 +236,14 @@ void BSTree_test(int argc, char* argv[])
 
 	travesal_bst(root.node);
 
-#if 1
+	bst_delete_node(&root, 18);	
+	bst_delete_node(&root, 20);	
+	bst_delete_node(&root, 27);
+	printf("==================\n");
+
+	travesal_bst(root.node);
+
+#if 0
 	int a, dir = 0;
 	bst_node *node = NULL;
 	bst_node *parent = NULL;
