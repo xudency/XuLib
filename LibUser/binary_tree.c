@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <memory.h>
 #include "type.h"
 
 
@@ -14,27 +15,22 @@ struct BSTreeNode {
 	struct BSTreeNode *right;	
 };
 
-/*struct BSTree_root {
-	struct bst_node *node;
-}*/
+struct BSTreeRoot {
+	struct BSTreeNode *node;
+};
 
-typedef struct BSTreeNode btnode;
-//typedef struct bst_root
+typedef struct BSTreeNode bst_node;
+typedef struct BSTreeRoot bst_root;
 
-// binary_tree ops
-//	insert
-//	delete
-//	search
-//	traversal
+bst_node *bst_search_node(bst_node *root, int val, bst_node **parent, int *dir);
 
-btnode *bt_search_node(btnode *root, int val, btnode **parent, int *dir);
+//////////////////////////////
 
-
-btnode *btnode_new(int val)
+bst_node *BSTree_NewNode(int val)
 {
-	btnode *tmp;
+	bst_node *tmp;
 
-	tmp = malloc(sizeof(btnode));
+	tmp = malloc(sizeof(bst_node));
 
 	tmp->left = tmp->right = NULL;
 	tmp->data = val;
@@ -42,25 +38,47 @@ btnode *btnode_new(int val)
 	return tmp;
 }
 
-void __bt_insert_node(btnode **root, btnode *node)
+void __bst_insert_node(bst_root *root, bst_node *node)
 {
-	if (*root == NULL) {
-		*root = node;
+	bst_node *tmp = root->node;
+	bst_node *tmp_parent = NULL;
+
+	while (tmp) {
+		tmp_parent = tmp;
+		if (node->data < tmp->data) {
+			tmp = tmp->left;
+		} else {
+			tmp = tmp->right;
+		}
+	}
+
+	if (tmp_parent) {
+		if (node->data < tmp_parent->data) {
+			tmp_parent->left = node;			
+		} else {
+			tmp_parent->right = node;			
+		}
+	} else {
+		root->node = node;
+	} 
+
+	/*if (root == NULL) {
+		root = node;
 		return;
 	}
 
-	if (node->data < (*root)->data) {
-		__bt_insert_node(&((*root)->left), node);
+	if (node->data < (root)->data) {
+		__bst_insert_node(&((root)->left), node);
 	} else {
-		__bt_insert_node(&((*root)->right), node);
-	}
+		__bst_insert_node(&((root)->right), node);
+	}*/
 }
 
-void bt_insert_node(btnode **root, int val)
+void bst_insert_node(bst_root *root, int val)
 {
-	btnode *new = btnode_new(val);
+	bst_node *new = BSTree_NewNode(val);
 
-	__bt_insert_node(root, new);
+	__bst_insert_node(root, new);
 }
 
 // when remove a node in binary_tree, we need rebuild it
@@ -80,13 +98,13 @@ void bt_insert_node(btnode **root, int val)
 //    k. (both child && has parent) && parent's right
 //    l. (both child && no parent)
 
-void __bt_delete_node(btnode** root, btnode *deleteNode)
+void __bt_delete_node(bst_node** root, bst_node *deleteNode)
 {  
-	btnode* parent = NULL;  
+	bst_node* parent = NULL;  
 	int dir = -1; 
 
 	// double check the deleteNode is exist, and get parent and dir
-	if (bt_search_node(*root, deleteNode->data, &parent, &dir) == NULL) {
+	if (bst_search_node(*root, deleteNode->data, &parent, &dir) == NULL) {
 		printf("Error state");
 		return;
 	}
@@ -119,8 +137,10 @@ void __bt_delete_node(btnode** root, btnode *deleteNode)
                 } else {
                         *root = deleteNode->right;  //i
                 }  
-        } else {  
-                __bt_insert_node(&deleteNode->left,deleteNode->right);  
+        } else {
+        	bst_root tmp;
+		tmp.node = deleteNode->left;
+                __bst_insert_node(&tmp, deleteNode->right);  
     		if (parent != NULL) {  
                         if(dir == LEFT_CHILD)  
                                 parent->left = deleteNode->left;  //j 
@@ -134,12 +154,12 @@ void __bt_delete_node(btnode** root, btnode *deleteNode)
         deleteNode = NULL;
 }
 
-void bt_delete_node(btnode** root, int value)
+void bt_delete_node(bst_node** root, int value)
 {
         int dir = -1;  
-        btnode* parent = NULL;  
+        bst_node* parent = NULL;  
 
-        btnode* deleteNode = bt_search_node(*root, value, &parent, &dir); 
+        bst_node* deleteNode = bst_search_node(*root, value, &parent, &dir); 
         if(deleteNode == NULL){  
                 printf("%s\n", "node not found");
         } else {
@@ -148,135 +168,82 @@ void bt_delete_node(btnode** root, int value)
 }
 
 
-btnode *bt_search_node(btnode *root, int val, btnode **parent, int *dir)
+bst_node *bst_search_node(bst_node *fnode, int val, bst_node **parent, int *dir)
 {
-	if (root->data == val) {
-		return root;
-	} else if (root->data < val) {
-		if (root->right != NULL) {
+	if (fnode->data == val) {
+		return fnode;
+	} else if (fnode->data < val) {
+		if (fnode->right != NULL) {
 			*dir = RIGHT_CHILD;
-			*parent = root;
-			return bt_search_node(root->right, val, parent, dir);
+			*parent = fnode;
+			return bst_search_node(fnode->right, val, parent, dir);
 		} else {
 			return NULL;
 		}
 	} else {
-		if (root->left != NULL) {			
+		if (fnode->left != NULL) {			
 			*dir = LEFT_CHILD;
-			*parent = root;
-			return bt_search_node(root->left, val, parent, dir);
+			*parent = fnode;
+			return bst_search_node(fnode->left, val, parent, dir);
 		} else {
 			return NULL;
 		}
 	}
 }
 
-
-void bt_destroy(btnode *root) 
+void bst_destroy(bst_node *fnode) 
 {
-	if(root) {
-		bt_destroy(root->left);
-		bt_destroy(root->right);
-		free(root);
+	if(fnode) {
+		bst_destroy(fnode->left);
+		bst_destroy(fnode->right);
+		free(fnode);
 	}
 }
 
-btnode *bt_next_entry(btnode **root)
+void travesal_bst(bst_node *fnode)
 {
-	btnode *node = *root;
+	//bst_node *node = root->node;
 
-	if ((*root)->left) {
-		*root = (*root)->left;
-		return node;
-	}
-
-	if ((*root)->right) {
-		*root = (*root)->right;
-		return node;
-	}
-
-	return NULL;
-}
-
-void travesal_bt(btnode *root)
-{
-	if (root) {
-		btnode *node = root;
+	if (fnode) {
+		//bst_node *node = root->node;
 		//do something, Just print
-		printf("%d\n", node->data);
+		printf("%d\n", fnode->data);
 		
-		travesal_bt(root->left);
-		travesal_bt(root->right);
+		travesal_bst(fnode->left);
+		travesal_bst(fnode->right);
 	}
 }
 
-/*btnode *next_entry(btnode **root)
+
+void BSTree_test(int argc, char* argv[])
 {
-	if (root) {
-		btnode *node = root;
-		
-		//do something, Just print
-		printf("%d\n", node->data);
-		
-		travesal_bt(root->left);
-		travesal_bt(root->right);
-	} else {
-		return NULL;
-	}
-}*/
+	bst_root root;
+	memset(&root, 0x00, sizeof(root));
 
-/*
-void print_preorder(btnode *root) {
-	if(root) {
-		printf("%d\n",root->data);
-		print_preorder(root->left);
-		print_preorder(root->right);
-	}
-}
+	bst_insert_node(&root, 15);
+	bst_insert_node(&root, 9);
+	bst_insert_node(&root, 20);
+	bst_insert_node(&root, 8);
+	bst_insert_node(&root, 10);
+	bst_insert_node(&root, 18);	
+	bst_insert_node(&root, 24);
+	bst_insert_node(&root, 12);	
+	bst_insert_node(&root, 19);
+	bst_insert_node(&root, 22);
+	bst_insert_node(&root, 28);
+	bst_insert_node(&root, 21);
+	bst_insert_node(&root, 27);
 
-void print_inorder(btnode *root) {
-	if(root) {
-		print_inorder(root->left);
-		printf("%d\n",root->data);
-		print_inorder(root->right);
-	}
-}
-
-void print_postorder(btnode *root) {
-	if(root) {
-		print_postorder(root->left);
-		print_postorder(root->right);
-		printf("%d\n",root->data);
-	}
-}*/
-
-void binary_tree_test(int argc, char* argv[])
-{
-	int a, dir = 0;
-	btnode *root = NULL;
-	btnode *node = NULL;
-	btnode *parent = NULL;
-
-	bt_insert_node(&root, 15);
-	bt_insert_node(&root, 9);
-	bt_insert_node(&root, 20);
-	bt_insert_node(&root, 8);
-	bt_insert_node(&root, 10);
-	bt_insert_node(&root, 18);	
-	bt_insert_node(&root, 24);
-	bt_insert_node(&root, 12);	
-	bt_insert_node(&root, 19);
-	bt_insert_node(&root, 22);
-	bt_insert_node(&root, 28);
-	bt_insert_node(&root, 21);
-	bt_insert_node(&root, 27);
-
-	travesal_bt(root);
+	travesal_bst(root.node);
 
 #if 1
+	int a, dir = 0;
+	bst_node *node = NULL;
+	bst_node *parent = NULL;
+
 	printf("pls input the val:");
 	scanf("%d", &a);
-	node = bt_search_node(root, a, &parent, &dir);
+	node = bst_search_node(root.node, a, &parent, &dir);
 	if (node) {
 		printf("find %d in tree, parent:%d dir:%d[L-0  R-1]\n", 
 				a, parent->data, dir);
@@ -285,20 +252,6 @@ void binary_tree_test(int argc, char* argv[])
 	}
 #endif
 
-#if 0
-	printf("preodrer\n");
-	print_preorder(root);
-	printf("===============\n");
-
-	printf("inodrer\n");
-	print_inorder(root);
-	printf("===============\n");
-
-	printf("postodrer\n");
-	print_postorder(root);
-	printf("===============\n");
-#endif
-
-	bt_destroy(root);
+	bst_destroy(root.node);
 }
 

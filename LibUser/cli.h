@@ -11,7 +11,7 @@ extern int cli_main(int argc, char* argv[]);
 
 
 //////
-extern void binary_tree_test(int argc, char* argv[]);
+extern void BSTree_test(int argc, char* argv[]);
 extern void sort_test(void);
 #endif
 

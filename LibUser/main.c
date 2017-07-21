@@ -24,9 +24,9 @@ int main(int argc, char* argv[])
 
 	//string_main(argc, argv);
 	
-	//binary_tree_test(argc, argv);
+	BSTree_test(argc, argv);
 
-	sort_test();
+	//sort_test();
 
 	return 0;
 }

@@ -152,8 +152,8 @@ void rb_rebalance(rb_root *root, rb_node * node)
 
 void rb_add_node(rb_root *root, rb_node *node) 
 {
-	rb_node* temp = root->rb_node;
-	rb_node* temp_parent = NULL;
+	rb_node *temp = root->rb_node;
+	rb_node *temp_parent = NULL;
 
 	while (temp) {
 		temp_parent = temp;
