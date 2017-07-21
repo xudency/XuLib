@@ -266,7 +266,7 @@ void binary_tree_test(int argc, char* argv[])
 
 	travesal_bt(root);
 
-#if 0
+#if 1
 	printf("pls input the val:");
 	scanf("%d", &a);
 	node = bt_search_node(root, a, &parent, &dir);

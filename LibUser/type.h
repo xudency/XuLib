@@ -6,7 +6,7 @@
 #define PRINT(format, args...)  \
     printf("[%s:%d]"format "\n", __FUNCTION__, __LINE__, ## args);
 
-
+typedef unsigned char bool;
 typedef unsigned char u8;
 typedef signed short s16;
 typedef unsigned short u16;

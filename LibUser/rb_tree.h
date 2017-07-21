@@ -20,9 +20,9 @@ typedef struct RBTreeRoot {
 } rb_root;
 
 
-#define rb_parent(r)       ((struct rb_node *)((r)->rb_parent))
-#define rb_left_child(r)   ((struct rb_node *)((r)->rb_left))
-#define rb_right_child(r)  ((struct rb_node *)((r)->rb_right))
+#define rb_parent(r)       ((rb_node *)((r)->rb_parent))
+#define rb_left_child(r)   ((rb_node *)((r)->rb_left))
+#define rb_right_child(r)  ((rb_node *)((r)->rb_right))
 #define rb_color(r)        ((r)->rb_color)
 #define rb_is_red(r)       ((r)->rb_color & RB_RED)
 #define rb_is_black(r)     ((r)->rb_color & RB_BLACK)
