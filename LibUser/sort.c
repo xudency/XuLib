@@ -3,6 +3,145 @@
 #include "type.h"
 
 
+// 直接插入排序 
+void insert_sort(u32 data[], u32 count)
+{
+    int i, j;
+
+    for (i = 1; i < count; i++)
+    {
+        u32 target = data[i];
+
+        for (j = i-1; (j >= 0) && (data[j] > target); j--)
+        {
+            data[j+1] = data[j];
+        }
+
+        data[j+1] = target;
+    }
+    
+    return;        
+}
+
+// hill排序 其实质是逐步缩小gap的直接插入排序
+void shell_insert_sort(u32 data[], u32 count)
+{
+    int i, j, gap;
+
+    for (gap=count/2; gap > 0; gap/=2)
+    {
+        for (i=gap; i < count; i++)
+        {
+            u32 target = data[i];
+            for (j=i-gap; (j >= 0) && (target < data[j]); j-=gap)
+            {
+                data[j + gap] = data[j];
+            }
+            
+            data[j + gap] = target;            
+        }
+    }
+
+    return;
+}
+
+void swap(u32 *a, u32 *b)
+{
+    int temp;
+
+    temp = *a;
+    *a = *b;
+    *b = temp;
+}
+
+void bubble_sort(u32 data[], u32 count)
+{
+    int i, j;
+
+    for (j = count-1; j > 0; j--)
+    {
+        for (i = 0; i < j; i++)
+        {
+            if (data[i] > data[i+1])
+                swap(data+i, data+i+1);
+        }
+    }
+}
+
+// 逐步冒泡
+void bubble_sort2(u32 data[], u32 count)
+{
+    int i, j;
+
+    for (j = 0; j < count - 1; j++)
+    {
+		//printf("loop %d\n", j);
+        for (i = count-1; i > j; i--)
+        {
+            if (data[i] < data[i-1])
+                swap(data+i, data+i-1);
+        }
+    }
+}
+
+void bubble_sort_opt(u32 data[], u32 count)
+{
+    int i, j;
+    bool seq = false;
+
+    for (j = 0; (j < count - 1) && (seq == false); j++)
+    {
+    	//printf("loop %d\n", j);
+        seq = true;
+        for (i = count-1; i > j; i--)
+        {
+            if (data[i] < data[i-1]) {
+                swap(data+i, data+i-1);
+                seq = false;
+            }
+        }
+        
+        // seq ??
+        //if (seq == true)
+        	//break;
+    }
+}
+
+int division(u32 list[], int left, int right) 
+{
+	u32 base = list[left];
+
+	while (left < right) {
+		while (left < right && list[right] >= base)
+			right--;
+
+		list[left] = list[right];
+
+		while (left < right && list[left] <= base)
+			left++;
+
+		list[right] = list[left];
+	}
+
+	list[left] = base;
+
+	return left;
+
+}
+
+void qsort_ok(u32 list[], int left, int right) 
+{
+
+	if (left < right) 
+	{
+		u32 base = division(list, left, right);
+
+		qsort_ok(list, left, base - 1);
+		qsort_ok(list, base + 1, right);
+	}
+}
+
+
 void quicksort(int array[], int left, int right) {
     if (left < right) {
         int key = array[left];
