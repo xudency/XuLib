@@ -3,7 +3,6 @@
 #include "type.h"
 
 
-// Ö±½Ó²åÈëÅÅĞò 
 void insert_sort(u32 data[], u32 count)
 {
     int i, j;
@@ -141,50 +140,105 @@ void qsort_ok(u32 list[], int left, int right)
 	}
 }
 
-
 void quicksort(int array[], int left, int right) {
     if (left < right) {
         int key = array[left];
         int low = left;
         int high = right;
         while (low < high) {
-            // highÏÂ±êÎ»ÖÃ¿ªÊ¼£¬Ïò×ó±ß±éÀú£¬²éÕÒ²»´óÓÚ»ù×¼ÊıµÄÔªËØ
             while (low < high && array[high] >= key) {
                 high--;
             }
-            if (low < high) {// ÕÒµ½Ğ¡ÓÚ×¼»ùÊıkeyµÄÔªËØ
-                array[low] = array[high];// ¸³Öµ¸ølowÏÂ±êÎ»ÖÃ£¬lowÏÂ±êÎ»ÖÃÔªËØÒÑ¾­Óë»ù×¼Êı¶Ô±È¹ıÁË
-                low++;// lowÏÂ±êºóÒÆ
-            } else {// Ã»ÓĞÕÒµ½±È×¼»ùÊıĞ¡µÄÔªËØ
-                // ËµÃ÷highÎ»ÖÃÓÒ±ßÔªËØ¶¼²»Ğ¡ÓÚ×¼»ùÊı
+            if (low < high) {
+                array[low] = array[high];
+                low++;
+            } else {
                 break;
             }
-            // lowÏÂ±êÎ»ÖÃ¿ªÊ¼£¬ÏòÓÒ±ß±éÀú£¬²éÕÒ²»Ğ¡ÓÚ»ù×¼ÊıµÄÔªËØ
             while (low < high && array[low] <= key) {
                 low++;
             }
-            if (low < high) {// ÕÒµ½±È»ù×¼Êı´óµÄÔªËØ
-                array[high] = array[low];// ¸³Öµ¸øhighÏÂ±êÎ»ÖÃ£¬highÏÂ±êÎ»ÖÃÔªËØÒÑ¾­Óë»ù×¼Êı¶Ô±È¹ıÁË
-                high--;// highÏÂ±êÇ°ÒÆ£¬
-            } else {// Ã»ÓĞÕÒµ½±È»ù×¼ÊıĞ¡µÄÔªËØ
-                // ËµÃ÷lowÎ»ÖÃ×ó±ßÔªËØ¶¼²»´óÓÚ»ù×¼Êı
+            if (low < high) {
+                array[high] = array[low];
+                high--;
+            } else {
                 break;
             }
         }
-        array[low] = key;// lowÏÂ±ê¸³Öµ»ù×¼Êı
+        array[low] = key;
         quicksort(array, left, low - 1);
         quicksort(array, low + 1, right);
     }
 }
 
 
+void quick_sort(int a[], int left, int right)
+{
+	int i = left;
+	int j = right;
+
+	if (left>=right)
+		return;
+
+	int base = a[left];
+
+	while(i != j) {
+		while (a[j]>=base && j>i) {
+			j--;
+		}
+
+		while (a[i]<=base && i<j) {
+			i++;
+		}
+
+		if (i < j) {
+			int tmp = a[i];
+			a[i] = a[j];
+			a[j] = tmp;
+		}
+	}
+
+	a[left] = a[i];
+	a[i] = base;
+
+	quick_sort(a, left, i-1);
+	quick_sort(a, i+1, right);
+
+}
+
+
+int partition(int arr[], int low, int high)
+{
+    int pivot = arr[low];     //æ¢è½´è®°å½•
+    while (low<high){
+        while (low<high && arr[high]>=pivot) --high;
+        arr[low]=arr[high];             //äº¤æ¢æ¯”æ¢è½´å°çš„è®°å½•åˆ°å·¦ç«¯
+        while (low<high && arr[low]<=pivot) ++low;
+        arr[high] = arr[low];           //äº¤æ¢æ¯”æ¢è½´å°çš„è®°å½•åˆ°å³ç«¯
+    }
+    //æ‰«æå®Œæˆï¼Œæ¢è½´åˆ°ä½
+    arr[low] = pivot;
+    //è¿”å›çš„æ˜¯æ¢è½´çš„ä½ç½®
+    return low;
+}
+
+void qsort2(int arr[], int low, int high)
+{
+    if (low < high){
+        int pivot=partition(arr, low, high);        //å°†æ•°ç»„åˆ†ä¸ºä¸¤éƒ¨åˆ†
+        qsort2(arr, low, pivot-1);                   //é€’å½’æ’åºå·¦å­æ•°ç»„
+        qsort2(arr, pivot+1, high);                  //é€’å½’æ’åºå³å­æ•°ç»„
+    }
+}
+
 void sort_test(void)
 {
 	int i;
-	int a[] = {33, 47, 25, 68, 4, 12, 56, 9};
+	int a[] = {6, 1, 2, 7, 9, 11, 4, 5, 10, 8};
 	int size = sizeof(a) / (sizeof(a[0]));
 	
-	quicksort(a, 0, size - 1);
+	//quicksort(a, 0, size - 1);
+	qsort2(a, 0, size - 1);
 
 	for (i = 0; i < size; i++) {
 		printf("a[%d]=%d\n", i, a[i]);
