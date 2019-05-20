@@ -25,8 +25,7 @@
 #include <sys/stat.h>
 #include <time.h>
 #include <math.h>
-#include "type.h"
-#include "../common.h"
+#include "libtype.h"
 
 #define LINE_BYTES 0x10        // how many bytes in one line
 

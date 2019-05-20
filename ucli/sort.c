@@ -1,6 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include "type.h"
+#include "libtype.h"
 
 
 void insert_sort(u32 data[], u32 count)
@@ -86,22 +86,22 @@ void bubble_sort2(u32 data[], u32 count)
 void bubble_sort_opt(u32 data[], u32 count)
 {
     int i, j;
-    bool seq = false;
+    bool seq = 0;
 
-    for (j = 0; (j < count - 1) && (seq == false); j++)
+    for (j = 0; (j < count - 1) && (seq == 0); j++)
     {
     	//printf("loop %d\n", j);
-        seq = true;
+        seq = 1;
         for (i = count-1; i > j; i--)
         {
             if (data[i] < data[i-1]) {
                 swap(data+i, data+i-1);
-                seq = false;
+                seq = 0;
             }
         }
         
         // seq ??
-        //if (seq == true)
+        //if (seq == 1)
         	//break;
     }
 }

@@ -1,3 +1,11 @@
+/*
+ *  CLI Main entrance
+ *
+ *  wxcli -cmd
+ *
+ */
+
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -9,16 +17,11 @@
 #include <time.h>
 #include <math.h>
 
-#include "type.h"
 #include "cli.h"
-#include "string.h"
-#include "skiplist.h"
-#include "../common.h"
-
 
 int main(int argc, char* argv[])
 {
-	//cli_main(argc, argv);
+	cli_main(argc, argv);
 
 	//string_main(argc, argv);
 
@@ -26,7 +29,7 @@ int main(int argc, char* argv[])
 	
 	//BSTree_test(argc, argv);
 
-	sort_test();
+	//sort_test();
 
 	return 0;
 }

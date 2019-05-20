@@ -1,13 +1,13 @@
 #include <string.h>
 #include "string.h"
-#include "type.h"
+#include "libtype.h"
 
 void strlen_test(void)
 {
 	char *str = "xudc: 1989";
 
 	// strlen(str) NOT include '\0'	
-	PRINT("string:%s len:%lu", str, strlen(str));
+	PRINTU("string:%s len:%u", str, strlen(str));
 
 	return;
 }

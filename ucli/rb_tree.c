@@ -1,6 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include "type.h"
+#include "libtype.h"
 #include "rb_tree.h"
 
 /* * 对红黑树的节点(x)进行左旋转 * * 左旋示意图(对节点x进行左旋)： */  

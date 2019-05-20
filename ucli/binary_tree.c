@@ -1,8 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <memory.h>
-#include "type.h"
-
+#include "libtype.h"
 
 #define LEFT_CHILD 	0
 #define RIGHT_CHILD	1

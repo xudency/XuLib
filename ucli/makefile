@@ -5,7 +5,7 @@
 #===========================================================================
 
 # Excecutable file.
-PROGRAM   = usrkit
+PROGRAM   = wxcli
 
 # Parameters .
 CC      = gcc

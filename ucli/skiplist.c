@@ -2,7 +2,9 @@
 #include <stdio.h>
 #include <time.h>
 #include "skiplist.h"
-#include "type.h"
+#include "libtype.h"
+
+
 skiplistNode *slCreateNode(int level, double score) 
 {
         skiplistNode * sn = malloc(sizeof(*sn) + \
@@ -206,7 +208,7 @@ int skiplist_main(int argc, char *argv[])
         }
         printf("=== Delete Skip List ===\n");
         for (i = 0; i < count+10; i+=2) {
-                PRINT("Delete[%d]: %s", i, slDelete(sl, i)?"SUCCESS":"NOT FOUND");
+                PRINTU("Delete[%d]: %s", i, slDelete(sl, i)?"SUCCESS":"NOT FOUND");
         }
         slPrint(sl);
 
